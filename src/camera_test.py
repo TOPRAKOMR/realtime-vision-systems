@@ -20,13 +20,24 @@ def main():
         current_time = time.time()
         time_diff = current_time - prev_time
 
+        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        edges = cv2.Canny(gray_frame, 100, 200) 
+
+        edges_colored = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+        combined = cv2.hconcat([frame, edges_colored])
+
+       
+
         fps = 1 / time_diff if time_diff > 0 else 0
         prev_time = current_time
 
         cv2.putText(frame, f'FPS: {fps:.2f}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
         
-        cv2.imshow('Real-Time Camera Stream', frame)
+        # cv2.imshow('Original Camera Stream', frame)
+        # cv2.imshow('Real-Time Camera Stream', edges)
+        cv2.imshow("Original | Edge Detection", combined)
+       
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
