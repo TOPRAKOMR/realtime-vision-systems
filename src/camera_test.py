@@ -26,6 +26,15 @@ def main():
         # edges = cv2.Canny(gray_frame, 100, 200)
         edges = cv2.Canny(blurred_frame, 100, 200)
 
+        contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        for contour in contours:
+            area = cv2.contourArea(contour)
+            if 1000 < area < 50000:
+                x, y, w, h = cv2.boundingRect(contour)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                cv2.putText(frame, f"Area: {int(area)}", (x, y - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+
       
         fps = 1 / time_diff if time_diff > 0 else 0
         prev_time = current_time
